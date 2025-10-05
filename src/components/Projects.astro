@@ -1,0 +1,90 @@
+---
+import Section from "./Section.astro";
+import { Image } from "astro:assets";
+import type { ProjectProps } from "@types";
+
+interface Props {
+  projects: ProjectProps[];
+}
+
+const { projects } = Astro.props;
+---
+
+<Section text="Featured Projects" href="projects">
+{
+  projects.map(({ name, summary, image, linkPreview, linkSource, collaborators }, index) => {
+    const top = 98 + index * 40;
+    return (
+      <div
+        style={`top: ${top}px;`}
+        class="sticky mb-12 rounded-2xl border border-neutral/20 bg-black"
+      >
+        <div class="bg-difu relative z-[1] grid h-[580px] w-full grid-rows-2 rounded-2xl bg-[#1c232d]/85 before:absolute before:inset-0 before:z-[-1] before:rounded-2xl before:bg-[url(/raja.png)] before:bg-[length:128px] before:bg-repeat before:opacity-[5%] before:content-[''] sm:grid-cols-2 sm:grid-rows-1 md:h-96">
+          <div class="px-6 pt-12">
+            <h3 class="mb-5 font-serif text-3xl font-medium text-primary">
+              {name}
+            </h3>
+            <p class="text-base text-neutral">{summary}</p>
+
+            {/* 👇 Tambahin ini: Section kolaborator */}
+            {collaborators && (
+              <div class="flex items-center gap-3 mt-6">
+                <span class="text-sm text-neutral/70">Collaborators:</span>
+                <div class="flex gap-2">
+                  {collaborators.map((person) => (
+                    <a
+                      href={person.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={person.name}
+                      class="group relative"
+                    >
+                      <img
+                        src={person.avatar}
+                        alt={person.name}
+                        class="w-8 h-8 rounded-full border border-neutral/30 hover:scale-110 transition-transform"
+                      />
+                      {/* Tooltip nama saat hover */}
+                      <span class="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 scale-0 group-hover:scale-100 rounded bg-black px-2 py-1 text-xs text-white shadow-lg transition-transform duration-200">
+                        {person.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Link Source dan Preview */}
+            <div class="flex gap-5 pt-10 text-white">
+              <a
+                href={linkSource}
+                target="_blank"
+                class="after:relative after:bottom-[-5px] after:content-[url(/external.svg)] hover:underline"
+              >
+                Source
+              </a>
+              <a
+                href={linkPreview}
+                target="_blank"
+                class="after:relative after:bottom-[-5px] after:content-[url(/external.svg)] hover:underline"
+              >
+                Preview
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-end justify-end overflow-hidden">
+            <Image
+              class="h-full w-[95%] rounded-ss-xl rounded-ee-2xl object-none object-left-top sm:h-[85%] sm:w-full"
+              src={image}
+              alt={name}
+              width="736"
+              height="483"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  })
+}
+</Section>
